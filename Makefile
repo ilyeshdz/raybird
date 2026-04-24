@@ -15,6 +15,9 @@ OBJECTS  = $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 all: $(TARGET)
 
+run: $(TARGET)
+	./$(TARGET)
+
 $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(TARGET) $(LDFLAGS) $(RAYLIB_LIBS)
 
@@ -27,4 +30,4 @@ $(OBJDIR):
 clean:
 	rm -rf $(BUILDDIR) compile_commands.json
 
-.PHONY: all clean
+.PHONY: all run clean
