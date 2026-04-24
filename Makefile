@@ -1,4 +1,4 @@
-TARGET   = build/my_game
+TARGET   = build/raybird
 CC       = gcc
 CFLAGS   = -Wall -Wextra -std=c11
 LDFLAGS  =
@@ -12,7 +12,6 @@ OBJDIR   = $(BUILDDIR)/obj
 
 SOURCES  = $(wildcard $(SRCDIR)/*.c)
 OBJECTS  = $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-
 
 all: $(TARGET)
 
