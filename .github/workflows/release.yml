@@ -5,13 +5,16 @@ on:
     tags:
       - 'v*'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
         include:
           - os: ubuntu-latest
             artifact_name: raybird-linux
@@ -19,9 +22,6 @@ jobs:
           - os: macos-latest
             artifact_name: raybird-macos
             asset_name: raybird-macos-amd64
-          - os: windows-latest
-            artifact_name: raybird-windows
-            asset_name: raybird-windows-amd64.exe
 
     steps:
     - name: Checkout code
@@ -37,11 +37,6 @@ jobs:
       if: matrix.os == 'macos-latest'
       run: |
         brew install cmake glfw
-
-    - name: Install dependencies (Windows)
-      if: matrix.os == 'windows-latest'
-      run: |
-        choco install cmake
 
     - name: Build raylib (Ubuntu)
       if: matrix.os == 'ubuntu-latest'
@@ -65,35 +60,16 @@ jobs:
         cmake --build . --config Release
         sudo cmake --install . --config Release
 
-    - name: Build raylib (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        git clone https://github.com/raysan5/raylib.git
-        cd raylib
-        mkdir build
-        cd build
-        cmake .. -G "Visual Studio 17 2022" -A x64 -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=OFF -DCMAKE_INSTALL_PREFIX=../install
-        cmake --build . --config Release
-        cmake --install . --config Release
-        echo "CMAKE_PREFIX_PATH=$env:GITHUB_WORKSPACE\raylib\install" >> $env:GITHUB_ENV
-
     - name: Configure CMake
       run: cmake -B build -DCMAKE_BUILD_TYPE=Release
 
     - name: Build
       run: cmake --build build --config Release
 
-    - name: Create archive (Linux/macOS)
-      if: runner.os != 'Windows'
+    - name: Create archive
       run: |
         cd build/bin
         tar czf ../../${{ matrix.artifact_name }}.tar.gz raybird
-
-    - name: Create archive (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        cd build/bin/Release
-        7z a ../../../${{ matrix.artifact_name }}.zip raybird.exe
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
@@ -101,7 +77,6 @@ jobs:
         name: ${{ matrix.artifact_name }}
         path: |
           ${{ matrix.artifact_name }}.tar.gz
-          ${{ matrix.artifact_name }}.zip
 
   release:
     name: Create Release
@@ -124,5 +99,4 @@ jobs:
         files: |
           artifacts/raybird-linux/raybird-linux.tar.gz
           artifacts/raybird-macos/raybird-macos.tar.gz
-          artifacts/raybird-windows/raybird-windows.zip
         generate_release_notes: true
