@@ -10,6 +10,16 @@
 
 #define HIGH_SCORE_FILE "highscore.txt"
 
+static void SpawnPlayerParticles(ParticleSystem *particles, const Player *player, ParticleType type, int count) {
+  for (int i = 0; i < count; i++) {
+    Vector2 particlePos = {
+      .x = player->position.x + player->size.x / 2,
+      .y = player->position.y + player->size.y / 2
+    };
+    SpawnParticle(particles, particlePos, type);
+  }
+}
+
 static int LoadHighScore(void) {
   FILE *file = fopen(HIGH_SCORE_FILE, "r");
   if (file) {
@@ -75,14 +85,7 @@ void UpdateGame(GameState *state) {
   if (state->status == GAME_RUNNING) {
     if (IsKeyPressed(KEY_SPACE)) {
       PlayerJump(&state->player);
-      // Spawn feather particles on jump
-      for (int i = 0; i < 3; i++) {
-        Vector2 particlePos = {
-          .x = state->player.position.x + state->player.size.x / 2,
-          .y = state->player.position.y + state->player.size.y / 2
-        };
-        SpawnParticle(&state->particles, particlePos, PARTICLE_FEATHER);
-      }
+      SpawnPlayerParticles(&state->particles, &state->player, PARTICLE_FEATHER, 3);
     }
 
     UpdatePlayer(&state->player);
@@ -107,14 +110,7 @@ void UpdateGame(GameState *state) {
 
     if (collision != COLLISION_NONE) {
       state->status = GAME_OVER;
-      // Spawn explosion particles on death
-      for (int i = 0; i < 20; i++) {
-        Vector2 particlePos = {
-          .x = state->player.position.x + state->player.size.x / 2,
-          .y = state->player.position.y + state->player.size.y / 2
-        };
-        SpawnParticle(&state->particles, particlePos, PARTICLE_EXPLOSION);
-      }
+      SpawnPlayerParticles(&state->particles, &state->player, PARTICLE_EXPLOSION, 20);
       // Save high score if current score is higher
       if (state->score > state->highScore) {
         state->highScore = state->score;
