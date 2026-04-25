@@ -25,7 +25,15 @@ void UpdatePipes(Pipe *pipes, int count) {
     pipes[i].topRect.x -= PIPE_SPEED * GetFrameTime();
 
     if (pipes[i].topRect.x + PIPE_WIDTH < 0) {
-      InitPipe(&pipes[i], GetScreenWidth() + ((count - 1) * PIPE_SPACE));
+      // Find the rightmost pipe
+      float maxRight = 0.0f;
+      for (int j = 0; j < count; j++) {
+        if (pipes[j].topRect.x > maxRight) {
+          maxRight = pipes[j].topRect.x;
+        }
+      }
+      // Place the recycled pipe immediately after the rightmost pipe
+      InitPipe(&pipes[i], maxRight + PIPE_SPACE);
     }
   }
 }
