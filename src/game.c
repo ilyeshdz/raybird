@@ -13,10 +13,12 @@
 static int LoadHighScore(void) {
   FILE *file = fopen(HIGH_SCORE_FILE, "r");
   if (file) {
-    int score;
-    fscanf(file, "%d", &score);
+    int score = 0;
+    if (fscanf(file, "%d", &score) == 1) {
+      fclose(file);
+      return score;
+    }
     fclose(file);
-    return score;
   }
   return 0;
 }
