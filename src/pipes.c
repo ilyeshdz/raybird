@@ -15,16 +15,16 @@ void InitPipe(Pipe *pipe, float xPos, int score) {
   pipe->xPos = xPos;
   pipe->passed = false;
   float currentGap = GetCurrentPipeGap(score);
-  int maxGapY = GetScreenHeight() - PIPE_WIDTH - currentGap;
+  int maxGapY = (int)(GetScreenHeight() - PIPE_WIDTH - currentGap);
   int gapCenterY = GetRandomValue(MIN_GAP_Y, maxGapY);
 
   pipe->topRect = (Rectangle){.x = xPos,
-                               .y = gapCenterY - PIPE_HEIGHT,
+                               .y = (float)(gapCenterY - PIPE_HEIGHT),
                                .width = PIPE_WIDTH,
                                .height = PIPE_HEIGHT};
 
   pipe->bottomRect = (Rectangle){.x = xPos,
-                                  .y = gapCenterY + currentGap,
+                                  .y = (float)(gapCenterY + currentGap),
                                   .width = PIPE_WIDTH,
                                   .height = PIPE_HEIGHT};
 }
@@ -44,13 +44,13 @@ void UpdatePipes(Pipe *pipes, int count, int score) {
         }
       }
       // Place the recycled pipe immediately after the rightmost pipe
-      InitPipe(&pipes[i], maxRight + PIPE_SPACE, score);
+      InitPipe(&pipes[i], maxRight + (float)PIPE_SPACE, score);
     }
   }
 }
 
 void ResetPipes(Pipe *pipes, int count, int score) {
   for (int i = 0; i < count; i++) {
-    InitPipe(&pipes[i], GetScreenWidth() + (i * PIPE_SPACE), score);
+    InitPipe(&pipes[i], (float)(GetScreenWidth() + (i * PIPE_SPACE)), score);
   }
 }

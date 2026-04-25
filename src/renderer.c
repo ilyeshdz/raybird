@@ -22,14 +22,14 @@ void RenderPauseMenu(void) {
   const char *restart = "[R] Restart";
   const char *quit = "[Q] Quit";
   
-  DrawText(title, (GetScreenWidth() - MeasureText(title, PAUSE_TITLE_SIZE)) / 2.0f,
-           GetScreenHeight() / 4.0f, PAUSE_TITLE_SIZE, YELLOW);
-  DrawText(resume, (GetScreenWidth() - MeasureText(resume, PAUSE_MENU_SIZE)) / 2.0f,
-           GetScreenHeight() / 2.0f, PAUSE_MENU_SIZE, WHITE);
-  DrawText(restart, (GetScreenWidth() - MeasureText(restart, PAUSE_MENU_SIZE)) / 2.0f,
-           GetScreenHeight() / 2.0f + PAUSE_MENU_SPACING, PAUSE_MENU_SIZE, WHITE);
-  DrawText(quit, (GetScreenWidth() - MeasureText(quit, PAUSE_MENU_SIZE)) / 2.0f,
-           GetScreenHeight() / 2.0f + (PAUSE_MENU_SPACING * 2), PAUSE_MENU_SIZE, WHITE);
+  DrawText(title, (int)((GetScreenWidth() - MeasureText(title, PAUSE_TITLE_SIZE)) / 2.0f),
+           (int)(GetScreenHeight() / 4.0f), PAUSE_TITLE_SIZE, YELLOW);
+  DrawText(resume, (int)((GetScreenWidth() - MeasureText(resume, PAUSE_MENU_SIZE)) / 2.0f),
+           (int)(GetScreenHeight() / 2.0f), PAUSE_MENU_SIZE, WHITE);
+  DrawText(restart, (int)((GetScreenWidth() - MeasureText(restart, PAUSE_MENU_SIZE)) / 2.0f),
+           (int)(GetScreenHeight() / 2.0f + PAUSE_MENU_SPACING), PAUSE_MENU_SIZE, WHITE);
+  DrawText(quit, (int)((GetScreenWidth() - MeasureText(quit, PAUSE_MENU_SIZE)) / 2.0f),
+           (int)(GetScreenHeight() / 2.0f + (PAUSE_MENU_SPACING * 2)), PAUSE_MENU_SIZE, WHITE);
 }
 
 void RenderUI(const GameState *state) {
@@ -46,8 +46,8 @@ void RenderUI(const GameState *state) {
 #endif
 
   if (state->status == GAME_OVER) {
-    DrawText("FINISH", (GetScreenWidth() - MeasureText("FINISH", UI_FONT_SIZE)) / 2.0f,
-             (GetScreenHeight() - UI_FONT_SIZE) / 2.0f, UI_FONT_SIZE, RED);
+    DrawText("FINISH", (int)((GetScreenWidth() - MeasureText("FINISH", UI_FONT_SIZE)) / 2.0f),
+             (int)((GetScreenHeight() - UI_FONT_SIZE) / 2.0f), UI_FONT_SIZE, RED);
   } else if (state->status == GAME_PAUSED) {
     RenderPauseMenu();
   }

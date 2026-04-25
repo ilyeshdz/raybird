@@ -31,8 +31,8 @@ void SpawnParticle(ParticleSystem *system, Vector2 position, ParticleType type) 
       } else if (type == PARTICLE_EXPLOSION) {
         p->size = (Vector2){(float)GetRandomValue(5, 15), (float)GetRandomValue(5, 15)};
         p->color = (Color){
-          .r = GetRandomValue(200, 255),
-          .g = GetRandomValue(100, 200),
+          .r = (unsigned char)GetRandomValue(200, 255),
+          .g = (unsigned char)GetRandomValue(100, 200),
           .b = 0,
           .a = 255
         };

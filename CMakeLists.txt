@@ -94,6 +94,7 @@ endif()
 # Compiler warnings
 if(MSVC)
     target_compile_options(raybird PRIVATE /W4 /WX)
+    target_compile_definitions(raybird PRIVATE _CRT_SECURE_NO_WARNINGS)
 else()
     target_compile_options(raybird PRIVATE
         $<$<COMPILE_LANGUAGE:C>:-Wall -Wextra -Wpedantic -Werror>
