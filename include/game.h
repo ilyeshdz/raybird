@@ -17,7 +17,7 @@ typedef struct {
   bool shouldQuit;
 } GameState;
 
-GameState InitGame();
+GameState InitGame(void);
 void UpdateGame(GameState *state);
 void RestartGame(GameState *state);
 void DrawGame(GameState *state);

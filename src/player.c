@@ -6,7 +6,7 @@ Rectangle GetPlayerRect(Player *p) {
                      .y = p->position.y,
                      .height = p->size.y,
                      .width = p->size.x};
-};
+}
 
 void PlayerJump(Player *p) { p->velocity.y = -p->jumpForce; }
 

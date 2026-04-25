@@ -3,7 +3,7 @@
 
 #include "game.h"
 
-int main() {
+int main(void) {
   const int width = 1280;
   const int height = 720;
 

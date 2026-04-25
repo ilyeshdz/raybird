@@ -1,6 +1,6 @@
 TARGET   = build/raybird
 CC       = gcc
-CFLAGS   = -Wall -Wextra -std=c11 -Iinclude
+CFLAGS   = -Wall -Wextra -Wpedantic -Werror -std=c11 -Iinclude
 LDFLAGS  =
 
 RAYLIB_CFLAGS = $(shell pkg-config --cflags raylib)

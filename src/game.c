@@ -5,7 +5,7 @@
 #include "renderer.h"
 #include "raylib.h"
 
-GameState InitGame() {
+GameState InitGame(void) {
   GameState game_state = {
       .status = GAME_RUNNING,
       .score = 0,
