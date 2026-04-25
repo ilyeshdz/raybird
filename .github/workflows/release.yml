@@ -27,26 +27,44 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install raylib (Ubuntu)
+    - name: Install dependencies (Ubuntu)
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
-        sudo apt-get install -y libraylib-dev
+        sudo apt-get install -y build-essential git cmake libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev libx11-dev libxcursor-dev libxinerama-dev libxi-dev libxrandr-dev libxfixes-dev
 
-    - name: Install raylib (macOS)
+    - name: Install dependencies (macOS)
       if: matrix.os == 'macos-latest'
       run: |
-        brew install raylib
+        brew install cmake glfw
 
-    - name: Install raylib (Windows)
+    - name: Install dependencies (Windows)
       if: matrix.os == 'windows-latest'
       run: |
-        # Download pre-built raylib for Windows
-        $url = "https://github.com/raysan5/raylib/releases/download/5.0/raylib-5.0_win64_msvc16.zip"
-        $output = "$env:TEMP\raylib.zip"
-        Invoke-WebRequest -Uri $url -OutFile $output
-        Expand-Archive -Path $output -DestinationPath $env:GITHUB_WORKSPACE\raylib
-        echo "RAYLIB_PATH=$env:GITHUB_WORKSPACE\raylib" >> $env:GITHUB_ENV
+        choco install cmake glfw
+
+    - name: Build raylib (Ubuntu/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        git clone https://github.com/raysan5/raylib.git
+        cd raylib
+        mkdir build
+        cd build
+        cmake .. -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=OFF
+        cmake --build . --config Release
+        sudo cmake --install . --config Release
+
+    - name: Build raylib (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        git clone https://github.com/raysan5/raylib.git
+        cd raylib
+        mkdir build
+        cd build
+        cmake .. -G "Visual Studio 17 2022" -A x64 -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=OFF
+        cmake --build . --config Release
+        cmake --install . --config Release
+        echo "CMAKE_PREFIX_PATH=$env:GITHUB_WORKSPACE\raylib" >> $env:GITHUB_ENV
 
     - name: Configure CMake
       run: cmake -B build -DCMAKE_BUILD_TYPE=Release
