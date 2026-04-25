@@ -82,6 +82,15 @@ if(APPLE)
     target_link_libraries(raybird PRIVATE "-framework Cocoa" "-framework IOKit" "-framework OpenGL" "-framework CoreVideo" "-framework CoreAudio")
 endif()
 
+# Linux-specific X11 libraries
+if(UNIX AND NOT APPLE)
+    find_package(X11 REQUIRED)
+    if(X11_FOUND)
+        target_link_libraries(raybird PRIVATE ${X11_LIBRARIES})
+        target_include_directories(raybird PRIVATE ${X11_INCLUDE_DIR})
+    endif()
+endif()
+
 # Compiler warnings
 target_compile_options(raybird PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-Wall -Wextra -Wpedantic -Werror>
