@@ -12,7 +12,7 @@ typedef struct {
   float jumpForce;
 } Player;
 
-Rectangle GetPlayerRect(Player *p);
+Rectangle GetPlayerRect(const Player *p);
 void UpdatePlayer(Player *p);
 void PlayerJump(Player *p);
 

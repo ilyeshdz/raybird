@@ -1,7 +1,7 @@
 #include "player.h"
 #include "raylib.h"
 
-Rectangle GetPlayerRect(Player *p) {
+Rectangle GetPlayerRect(const Player *p) {
   return (Rectangle){.x = p->position.x,
                      .y = p->position.y,
                      .height = p->size.y,

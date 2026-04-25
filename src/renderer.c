@@ -4,7 +4,7 @@
 #include "raylib.h"
 
 void RenderPlayer(const Player *player) {
-  Rectangle player_rect = GetPlayerRect((Player *)player);
+  Rectangle player_rect = GetPlayerRect(player);
   DrawRectangleRec(player_rect, LIGHTGRAY);
 }
 
