@@ -41,6 +41,19 @@ void UpdateGame(GameState *state) {
   for (int i = 0; i < MAX_PIPES; i++) {
     state->pipes[i].bottomRect.x -= 200 * GetFrameTime();
     state->pipes[i].topRect.x -= 200 * GetFrameTime();
+
+    if (state->pipes[i].topRect.x + PIPE_WIDTH < 0) {
+      state->pipes[i].topRect.x += (MAX_PIPES * PIPE_SPACE);
+      state->pipes[i].bottomRect.x += (MAX_PIPES * PIPE_SPACE);
+
+      int minGapY = 100;
+      int maxGapY = GetScreenHeight() - (PIPE_WIDTH + 50) - PIPE_GAP;
+      int gapCenterY = GetRandomValue(minGapY, maxGapY);
+
+      state->pipes[i].bottomRect.y =
+          gapCenterY - state->pipes[i].topRect.height;
+      state->pipes[i].bottomRect.y = gapCenterY + PIPE_GAP;
+    }
   }
 }
 void DrawGame(GameState *state) {
