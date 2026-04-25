@@ -47,6 +47,8 @@ GameState InitGame(void) {
       .score = 0,
       .highScore = LoadHighScore(),
       .shouldQuit = false,
+      .debugMode = false,
+      .lastMilestone = 0,
       .player = {.position = {.y = (GetScreenHeight() - PLAYER_SIZE) / 2.0f,
                               .x = (GetScreenWidth() - PLAYER_SIZE) / 2.0f},
                  .size = {.x = PLAYER_SIZE, .y = PLAYER_SIZE},
@@ -66,6 +68,7 @@ void RestartGame(GameState *state) {
       .x = (GetScreenWidth() - PLAYER_SIZE) / 2.0f,
   };
   state->score = 0;
+  state->lastMilestone = 0;
   state->player.velocity = (Vector2){0};
   state->status = GAME_RUNNING;
 
@@ -74,6 +77,27 @@ void RestartGame(GameState *state) {
 }
 
 void UpdateGame(GameState *state) {
+  // Debug mode toggle
+  if (IsKeyPressed(KEY_D)) {
+    state->debugMode = !state->debugMode;
+  }
+
+  // Debug cheats
+  if (state->debugMode) {
+    if (IsKeyPressed(KEY_ONE)) {
+      state->score += 5;
+    }
+    if (IsKeyPressed(KEY_TWO)) {
+      state->score += 10;
+    }
+    if (IsKeyPressed(KEY_THREE)) {
+      state->score += 25;
+    }
+    if (IsKeyPressed(KEY_ZERO)) {
+      state->score = 0;
+    }
+  }
+
   if (IsKeyPressed(KEY_ESCAPE)) {
     if (state->status == GAME_RUNNING) {
       state->status = GAME_PAUSED;
@@ -99,6 +123,14 @@ void UpdateGame(GameState *state) {
         if (state->player.position.x > state->pipes[i].topRect.x + state->pipes[i].topRect.width) {
           state->pipes[i].passed = true;
           state->score += SCORE_INCREMENT;
+
+          // Check for milestones
+          int milestone = (state->score / 10) * 10;
+          if (milestone > state->lastMilestone && milestone % 10 == 0) {
+            state->lastMilestone = milestone;
+            // Spawn celebration particles
+            SpawnPlayerParticles(&state->particles, &state->player, PARTICLE_EXPLOSION, 30);
+          }
         }
       }
     }

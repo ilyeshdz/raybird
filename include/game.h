@@ -18,6 +18,8 @@ typedef struct {
   int score;
   int highScore;
   bool shouldQuit;
+  bool debugMode;
+  int lastMilestone;
 } GameState;
 
 GameState InitGame(void);
