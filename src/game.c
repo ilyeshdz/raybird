@@ -1,6 +1,7 @@
 #include "game.h"
 #include "player.h"
 #include "pipes.h"
+#include "particles.h"
 #include "collision.h"
 #include "renderer.h"
 #include "raylib.h"
@@ -42,6 +43,7 @@ GameState InitGame(void) {
                  .velocity = {0}}};
 
   ResetPipes(game_state.pipes, MAX_PIPES);
+  InitParticleSystem(&game_state.particles);
 
   return game_state;
 }
@@ -56,6 +58,7 @@ void RestartGame(GameState *state) {
   state->status = GAME_RUNNING;
 
   ResetPipes(state->pipes, MAX_PIPES);
+  ResetParticles(&state->particles);
 }
 
 void UpdateGame(GameState *state) {
@@ -70,10 +73,19 @@ void UpdateGame(GameState *state) {
   if (state->status == GAME_RUNNING) {
     if (IsKeyPressed(KEY_SPACE)) {
       PlayerJump(&state->player);
+      // Spawn feather particles on jump
+      for (int i = 0; i < 3; i++) {
+        Vector2 particlePos = {
+          .x = state->player.position.x + state->player.size.x / 2,
+          .y = state->player.position.y + state->player.size.y / 2
+        };
+        SpawnParticle(&state->particles, particlePos, PARTICLE_FEATHER);
+      }
     }
 
     UpdatePlayer(&state->player);
     UpdatePipes(state->pipes, MAX_PIPES);
+    UpdateParticles(&state->particles, GetFrameTime());
 
     // Check if player passed through any pipe
     for (int i = 0; i < MAX_PIPES; i++) {
@@ -93,6 +105,14 @@ void UpdateGame(GameState *state) {
 
     if (collision != COLLISION_NONE) {
       state->status = GAME_OVER;
+      // Spawn explosion particles on death
+      for (int i = 0; i < 20; i++) {
+        Vector2 particlePos = {
+          .x = state->player.position.x + state->player.size.x / 2,
+          .y = state->player.position.y + state->player.size.y / 2
+        };
+        SpawnParticle(&state->particles, particlePos, PARTICLE_EXPLOSION);
+      }
       // Save high score if current score is higher
       if (state->score > state->highScore) {
         state->highScore = state->score;
@@ -105,10 +125,13 @@ void UpdateGame(GameState *state) {
     if (IsKeyPressed(KEY_R)) {
       RestartGame(state);
     }
-    if (IsKeyPressed(KEY_A)) {
+    if (IsKeyPressed(KEY_Q)) {
       state->shouldQuit = true;
     }
   }
+
+  // Update particles even when paused or game over (for smooth animation)
+  UpdateParticles(&state->particles, GetFrameTime());
 
   if (IsKeyPressed(KEY_SPACE) && state->status == GAME_OVER) {
     RestartGame(state);

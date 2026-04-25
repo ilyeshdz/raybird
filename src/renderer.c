@@ -1,6 +1,7 @@
 #include "renderer.h"
 #include "player.h"
 #include "pipes.h"
+#include "particles.h"
 #include "raylib.h"
 
 void RenderPlayer(const Player *player) {
@@ -52,6 +53,7 @@ void RenderGame(const GameState *state) {
     RenderPlayer(&state->player);
   }
   
+  RenderParticles(&state->particles);
   RenderUI(state);
   EndDrawing();
 }

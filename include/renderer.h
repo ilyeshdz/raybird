@@ -3,6 +3,7 @@
 
 #include "game.h"
 #include "pipes.h"
+#include "particles.h"
 
 #define UI_FONT_SIZE 20
 #define UI_SCORE_X 25
