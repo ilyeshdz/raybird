@@ -1,0 +1,99 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            artifact_name: raybird-linux
+            asset_name: raybird-linux-amd64
+          - os: macos-latest
+            artifact_name: raybird-macos
+            asset_name: raybird-macos-amd64
+          - os: windows-latest
+            artifact_name: raybird-windows
+            asset_name: raybird-windows-amd64.exe
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install raylib (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libraylib-dev
+
+    - name: Install raylib (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install raylib
+
+    - name: Install raylib (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        # Download pre-built raylib for Windows
+        $url = "https://github.com/raysan5/raylib/releases/download/5.0/raylib-5.0_win64_msvc16.zip"
+        $output = "$env:TEMP\raylib.zip"
+        Invoke-WebRequest -Uri $url -OutFile $output
+        Expand-Archive -Path $output -DestinationPath $env:GITHUB_WORKSPACE\raylib
+        echo "RAYLIB_PATH=$env:GITHUB_WORKSPACE\raylib" >> $env:GITHUB_ENV
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      run: cmake --build build --config Release
+
+    - name: Create archive (Linux/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        cd build/bin
+        tar czf ../../${{ matrix.artifact_name }}.tar.gz raybird
+
+    - name: Create archive (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        cd build/bin/Release
+        7z a ../../../${{ matrix.artifact_name }}.zip raybird.exe
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.artifact_name }}
+        path: |
+          ${{ matrix.artifact_name }}.tar.gz
+          ${{ matrix.artifact_name }}.zip
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          artifacts/raybird-linux/raybird-linux.tar.gz
+          artifacts/raybird-macos/raybird-macos.tar.gz
+          artifacts/raybird-windows/raybird-windows.zip
+        generate_release_notes: true
