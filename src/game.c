@@ -13,8 +13,8 @@ GameState InitGame(void) {
       .player = {.position = {.y = (GetScreenHeight() - PLAYER_SIZE) / 2.0f,
                               .x = (GetScreenWidth() - PLAYER_SIZE) / 2.0f},
                  .size = {.x = PLAYER_SIZE, .y = PLAYER_SIZE},
-                 .gravity = 500.0,
-                 .jumpForce = 400.0,
+                 .gravity = PLAYER_GRAVITY,
+                 .jumpForce = PLAYER_JUMP_FORCE,
                  .velocity = {0}}};
 
   ResetPipes(game_state.pipes, MAX_PIPES);
