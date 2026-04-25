@@ -36,6 +36,10 @@ void RenderUI(const GameState *state) {
   DrawText(TextFormat("Score: %d", state->score), UI_SCORE_X, UI_SCORE_Y, UI_FONT_SIZE, WHITE);
   DrawText(TextFormat("Best: %d", state->highScore), UI_SCORE_X, UI_SCORE_Y + 30, UI_FONT_SIZE, YELLOW);
 
+#ifdef DEBUG
+  DrawText(TextFormat("FPS: %d", GetFPS()), UI_SCORE_X, UI_SCORE_Y + 60, UI_FONT_SIZE, GREEN);
+#endif
+
   if (state->status == GAME_OVER) {
     DrawText("FINISH", (GetScreenWidth() - MeasureText("FINISH", UI_FONT_SIZE)) / 2.0f,
              (GetScreenHeight() - UI_FONT_SIZE) / 2.0f, UI_FONT_SIZE, RED);
