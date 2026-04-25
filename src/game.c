@@ -16,10 +16,9 @@ GameState InitGame() {
 }
 void UpdateGame(GameState *state) {
   if (IsKeyPressed(KEY_SPACE)) {
-    state->player.velocity.y = -state->player.jumpForce;
+    PlayerJump(&state->player);
   }
-  state->player.velocity.y += state->player.gravity * GetFrameTime();
-  state->player.position.y += state->player.velocity.y * GetFrameTime();
+  UpdatePlayer(&state->player);
 }
 void DrawGame(GameState *state) {
   BeginDrawing();

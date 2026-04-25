@@ -7,3 +7,10 @@ Rectangle GetPlayerRect(Player *p) {
                      .height = p->size.y,
                      .width = p->size.x};
 };
+
+void PlayerJump(Player *p) { p->velocity.y = -p->jumpForce; }
+
+void UpdatePlayer(Player *p) {
+  p->velocity.y += p->gravity * GetFrameTime();
+  p->position.y += p->velocity.y * GetFrameTime();
+}

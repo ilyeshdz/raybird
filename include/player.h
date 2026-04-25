@@ -13,5 +13,7 @@ typedef struct {
 } Player;
 
 Rectangle GetPlayerRect(Player *p);
+void UpdatePlayer(Player *p);
+void PlayerJump(Player *p);
 
 #endif
