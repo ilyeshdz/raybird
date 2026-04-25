@@ -77,6 +77,11 @@ add_executable(raybird ${SOURCES})
 target_link_libraries(raybird PRIVATE ${RAYLIB_LIBRARIES})
 target_include_directories(raybird PRIVATE ${RAYLIB_INCLUDE_DIRS})
 
+# macOS-specific frameworks
+if(APPLE)
+    target_link_libraries(raybird PRIVATE "-framework Cocoa" "-framework IOKit" "-framework OpenGL" "-framework CoreVideo" "-framework CoreAudio")
+endif()
+
 # Compiler warnings
 target_compile_options(raybird PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-Wall -Wextra -Wpedantic -Werror>
