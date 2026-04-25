@@ -61,7 +61,7 @@ jobs:
         cd raylib
         mkdir build
         cd build
-        cmake .. -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=OFF -DPLATFORM=MACOS -DOPENGL_VERSION=GL_VERSION_3.3
+        cmake .. -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=OFF -DPLATFORM=Desktop -DOPENGL_VERSION=GL_VERSION_3.3
         cmake --build . --config Release
         sudo cmake --install . --config Release
 
