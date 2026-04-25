@@ -7,7 +7,7 @@ int main(void) {
   const int width = 1280;
   const int height = 720;
 
-  InitWindow(width, height, "hello");
+  InitWindow(width, height, "Raybird");
   SetExitKey(0); // Disable ESC key closing the window
   GameState game_state = InitGame();
 
