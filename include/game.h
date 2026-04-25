@@ -17,7 +17,7 @@ typedef struct {
 } Pipe;
 
 typedef struct {
-  bool win;
+  bool running;
   Player player;
   Pipe pipes[MAX_PIPES];
 } GameState;

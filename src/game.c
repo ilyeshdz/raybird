@@ -6,7 +6,7 @@
 GameState InitGame() {
   const float player_size = 100.0f;
   GameState game_state = {
-      .win = false,
+      .running = true,
       .player = {.position = {.y = (GetScreenHeight() - player_size) / 2.0f,
                               .x = (GetScreenWidth() - player_size) / 2.0f},
                  .size = {.x = player_size, .y = player_size},
@@ -34,6 +34,9 @@ GameState InitGame() {
   return game_state;
 }
 void UpdateGame(GameState *state) {
+  if (IsKeyPressed(KEY_SPACE) && !state->running) {
+    state->running = true;
+  };
   if (IsKeyPressed(KEY_SPACE)) {
     PlayerJump(&state->player);
   }
@@ -54,16 +57,29 @@ void UpdateGame(GameState *state) {
           gapCenterY - state->pipes[i].topRect.height;
       state->pipes[i].bottomRect.y = gapCenterY + PIPE_GAP;
     }
+
+    Rectangle player_rect = GetPlayerRect(&state->player);
+
+    if (CheckCollisionRecs(state->pipes[i].topRect, player_rect) ||
+        CheckCollisionRecs(state->pipes[i].bottomRect, player_rect)) {
+      state->running = false;
+    }
   }
 }
+
 void DrawGame(GameState *state) {
   BeginDrawing();
   Rectangle player = GetPlayerRect(&state->player);
   ClearBackground(BLACK);
-  for (int i = 0; i < MAX_PIPES; i++) {
-    DrawRectangleRec(state->pipes[i].bottomRect, BLUE);
-    DrawRectangleRec(state->pipes[i].topRect, BLUE);
+  if (!state->running) {
+    DrawText("FINISH", (GetScreenWidth() - MeasureText("FINISH", 20)) / 2.0f,
+             (GetScreenHeight() - 20) / 2.0f, 20, RED);
+  } else {
+    for (int i = 0; i < MAX_PIPES; i++) {
+      DrawRectangleRec(state->pipes[i].bottomRect, BLUE);
+      DrawRectangleRec(state->pipes[i].topRect, BLUE);
+    }
+    DrawRectangleRec(player, LIGHTGRAY);
   }
-  DrawRectangleRec(player, LIGHTGRAY);
   EndDrawing();
 }
