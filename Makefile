@@ -7,19 +7,25 @@ RAYLIB_CFLAGS = $(shell pkg-config --cflags raylib)
 RAYLIB_LIBS   = $(shell pkg-config --libs raylib)
 
 SRCDIR   = src
+OBJDIR   = build/obj
 
 SOURCES  = $(wildcard $(SRCDIR)/*.c)
+OBJECTS  = $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 all: $(TARGET)
 
 run: $(TARGET)
 	./$(TARGET)
 
-$(TARGET): $(SOURCES)
+$(TARGET): $(OBJECTS)
 	mkdir -p build
-	$(CC) $(CFLAGS) $(RAYLIB_CFLAGS) $(SOURCES) -o $(TARGET) $(LDFLAGS) $(RAYLIB_LIBS)
+	$(CC) $(OBJECTS) -o $(TARGET) $(LDFLAGS) $(RAYLIB_LIBS)
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	mkdir -p $(OBJDIR)
+	$(CC) $(CFLAGS) $(RAYLIB_CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(TARGET) compile_commands.json
+	rm -rf build compile_commands.json
 
 .PHONY: all run clean
