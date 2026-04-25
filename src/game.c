@@ -33,9 +33,37 @@ GameState InitGame() {
 
   return game_state;
 }
+
+void RestartGame(GameState *state) {
+  const float player_size = 100.0f;
+  state->player.position = (Vector2){
+      .y = (GetScreenHeight() - player_size) / 2.0f,
+      .x = (GetScreenWidth() - player_size) / 2.0f,
+  };
+  state->player.velocity = (Vector2){.x = 0, .y = 0};
+  state->running = true;
+
+  for (int i = 0; i < MAX_PIPES; i++) {
+    state->pipes[i].xPos = GetScreenWidth() + (i * PIPE_SPACE);
+    int minGapY = 100;
+    int maxGapY = GetScreenHeight() - PIPE_WIDTH - PIPE_GAP;
+    int gapCenterY = GetRandomValue(minGapY, maxGapY);
+
+    state->pipes[i].topRect = (Rectangle){.x = state->pipes[i].xPos,
+                                          .y = gapCenterY - PIPE_HEIGHT,
+                                          .width = PIPE_WIDTH,
+                                          .height = 600};
+
+    state->pipes[i].bottomRect = (Rectangle){.x = state->pipes[i].xPos,
+                                             .y = gapCenterY + PIPE_GAP,
+                                             .width = PIPE_WIDTH,
+                                             .height = PIPE_HEIGHT};
+  }
+}
+
 void UpdateGame(GameState *state) {
   if (IsKeyPressed(KEY_SPACE) && !state->running) {
-    state->running = true;
+    RestartGame(state);
   };
   if (IsKeyPressed(KEY_SPACE)) {
     PlayerJump(&state->player);
