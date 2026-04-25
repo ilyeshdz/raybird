@@ -32,5 +32,6 @@ GameState InitGame();
 void UpdateGame(GameState *state);
 void RestartGame(GameState *state);
 void DrawGame(GameState *state);
+void InitPipe(Pipe *pipe, float xPos);
 
 #endif

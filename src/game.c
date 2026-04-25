@@ -3,6 +3,23 @@
 #include "raylib.h"
 #include <stdio.h>
 
+void InitPipe(Pipe *pipe, float xPos) {
+  pipe->xPos = xPos;
+  int minGapY = MIN_GAP_Y;
+  int maxGapY = GetScreenHeight() - PIPE_WIDTH - PIPE_GAP;
+  int gapCenterY = GetRandomValue(minGapY, maxGapY);
+
+  pipe->topRect = (Rectangle){.x = xPos,
+                               .y = gapCenterY - PIPE_HEIGHT,
+                               .width = PIPE_WIDTH,
+                               .height = PIPE_HEIGHT};
+
+  pipe->bottomRect = (Rectangle){.x = xPos,
+                                  .y = gapCenterY + PIPE_GAP,
+                                  .width = PIPE_WIDTH,
+                                  .height = PIPE_HEIGHT};
+}
+
 GameState InitGame() {
   GameState game_state = {
       .status = GAME_RUNNING,
@@ -15,20 +32,7 @@ GameState InitGame() {
                  .velocity = {0}}};
 
   for (int i = 0; i < MAX_PIPES; i++) {
-    game_state.pipes[i].xPos = GetScreenWidth() + (i * PIPE_SPACE);
-    int minGapY = MIN_GAP_Y;
-    int maxGapY = GetScreenHeight() - PIPE_WIDTH - PIPE_GAP;
-    int gapCenterY = GetRandomValue(minGapY, maxGapY);
-
-    game_state.pipes[i].topRect = (Rectangle){.x = game_state.pipes[i].xPos,
-                                              .y = gapCenterY - PIPE_HEIGHT,
-                                              .width = PIPE_WIDTH,
-                                              .height = 600};
-
-    game_state.pipes[i].bottomRect = (Rectangle){.x = game_state.pipes[i].xPos,
-                                                 .y = gapCenterY + PIPE_GAP,
-                                                 .width = PIPE_WIDTH,
-                                                 .height = PIPE_HEIGHT};
+    InitPipe(&game_state.pipes[i], GetScreenWidth() + (i * PIPE_SPACE));
   }
 
   return game_state;
@@ -44,20 +48,7 @@ void RestartGame(GameState *state) {
   state->status = GAME_RUNNING;
 
   for (int i = 0; i < MAX_PIPES; i++) {
-    state->pipes[i].xPos = GetScreenWidth() + (i * PIPE_SPACE);
-    int minGapY = MIN_GAP_Y;
-    int maxGapY = GetScreenHeight() - PIPE_WIDTH - PIPE_GAP;
-    int gapCenterY = GetRandomValue(minGapY, maxGapY);
-
-    state->pipes[i].topRect = (Rectangle){.x = state->pipes[i].xPos,
-                                          .y = gapCenterY - PIPE_HEIGHT,
-                                          .width = PIPE_WIDTH,
-                                          .height = 600};
-
-    state->pipes[i].bottomRect = (Rectangle){.x = state->pipes[i].xPos,
-                                             .y = gapCenterY + PIPE_GAP,
-                                             .width = PIPE_WIDTH,
-                                             .height = PIPE_HEIGHT};
+    InitPipe(&state->pipes[i], GetScreenWidth() + (i * PIPE_SPACE));
   }
 }
 
@@ -77,16 +68,7 @@ void UpdateGame(GameState *state) {
     state->pipes[i].topRect.x -= PIPE_SPEED * GetFrameTime();
 
     if (state->pipes[i].topRect.x + PIPE_WIDTH < 0) {
-      state->pipes[i].topRect.x += (MAX_PIPES * PIPE_SPACE);
-      state->pipes[i].bottomRect.x += (MAX_PIPES * PIPE_SPACE);
-
-      int minGapY = MIN_GAP_Y;
-      int maxGapY = GetScreenHeight() - (PIPE_WIDTH + 50) - PIPE_GAP;
-      int gapCenterY = GetRandomValue(minGapY, maxGapY);
-
-      state->pipes[i].bottomRect.y =
-          gapCenterY - state->pipes[i].topRect.height;
-      state->pipes[i].bottomRect.y = gapCenterY + PIPE_GAP;
+      InitPipe(&state->pipes[i], state->pipes[i].topRect.x + (MAX_PIPES * PIPE_SPACE));
     }
 
     Rectangle player_rect = GetPlayerRect(&state->player);
