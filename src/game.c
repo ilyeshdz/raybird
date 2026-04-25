@@ -91,7 +91,7 @@ void UpdateGame(GameState *state) {
     for (int i = 0; i < MAX_PIPES; i++) {
       if (!state->pipes[i].passed) {
         // Check if player has passed the pipe (player x > pipe x + pipe width)
-        if (state->player.position.x > state->pipes[i].topRect.x + PIPE_WIDTH) {
+        if (state->player.position.x > state->pipes[i].topRect.x + state->pipes[i].topRect.width) {
           state->pipes[i].passed = true;
           state->score += SCORE_INCREMENT;
         }
