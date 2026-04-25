@@ -8,12 +8,14 @@ int main() {
   const int height = 720;
 
   InitWindow(width, height, "hello");
+  SetExitKey(0); // Disable ESC key closing the window
   GameState game_state = InitGame();
 
   SetTargetFPS(60);
 
   while (!WindowShouldClose()) {
     UpdateGame(&game_state);
+    if (game_state.shouldQuit) break;
     DrawGame(&game_state);
   }
 

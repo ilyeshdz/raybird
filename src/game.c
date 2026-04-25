@@ -9,6 +9,7 @@ GameState InitGame() {
   GameState game_state = {
       .status = GAME_RUNNING,
       .score = 0,
+      .shouldQuit = false,
       .player = {.position = {.y = (GetScreenHeight() - PLAYER_SIZE) / 2.0f,
                               .x = (GetScreenWidth() - PLAYER_SIZE) / 2.0f},
                  .size = {.x = PLAYER_SIZE, .y = PLAYER_SIZE},
@@ -34,6 +35,14 @@ void RestartGame(GameState *state) {
 }
 
 void UpdateGame(GameState *state) {
+  if (IsKeyPressed(KEY_ESCAPE)) {
+    if (state->status == GAME_RUNNING) {
+      state->status = GAME_PAUSED;
+    } else if (state->status == GAME_PAUSED) {
+      state->status = GAME_RUNNING;
+    }
+  }
+  
   if (state->status == GAME_RUNNING) {
     state->score += SCORE_INCREMENT * GetFrameTime();
     
@@ -51,6 +60,15 @@ void UpdateGame(GameState *state) {
     
     if (collision != COLLISION_NONE) {
       state->status = GAME_OVER;
+    }
+  }
+  
+  if (state->status == GAME_PAUSED) {
+    if (IsKeyPressed(KEY_R)) {
+      RestartGame(state);
+    }
+    if (IsKeyPressed(KEY_A)) {
+      state->shouldQuit = true;
     }
   }
   

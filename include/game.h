@@ -7,13 +7,14 @@
 #define PLAYER_SIZE 100.0f
 #define SCORE_INCREMENT 4
 
-typedef enum { GAME_RUNNING, GAME_OVER } GameStatus;
+typedef enum { GAME_RUNNING, GAME_PAUSED, GAME_OVER } GameStatus;
 
 typedef struct {
   GameStatus status;
   Player player;
   Pipe pipes[MAX_PIPES];
   float score;
+  bool shouldQuit;
 } GameState;
 
 GameState InitGame();
