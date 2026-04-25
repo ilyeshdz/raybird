@@ -20,6 +20,7 @@ typedef struct {
   bool running;
   Player player;
   Pipe pipes[MAX_PIPES];
+  float score;
 } GameState;
 
 GameState InitGame();

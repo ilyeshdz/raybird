@@ -10,6 +10,8 @@ int main() {
   InitWindow(width, height, "hello");
   GameState game_state = InitGame();
 
+  SetTargetFPS(60);
+
   while (!WindowShouldClose()) {
     UpdateGame(&game_state);
     DrawGame(&game_state);

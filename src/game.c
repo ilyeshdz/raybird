@@ -7,6 +7,7 @@ GameState InitGame() {
   const float player_size = 100.0f;
   GameState game_state = {
       .running = true,
+      .score = 0,
       .player = {.position = {.y = (GetScreenHeight() - player_size) / 2.0f,
                               .x = (GetScreenWidth() - player_size) / 2.0f},
                  .size = {.x = player_size, .y = player_size},
@@ -40,6 +41,7 @@ void RestartGame(GameState *state) {
       .y = (GetScreenHeight() - player_size) / 2.0f,
       .x = (GetScreenWidth() - player_size) / 2.0f,
   };
+  state->score = 0;
   state->player.velocity = (Vector2){.x = 0, .y = 0};
   state->running = true;
 
@@ -62,6 +64,9 @@ void RestartGame(GameState *state) {
 }
 
 void UpdateGame(GameState *state) {
+  if (state->running) {
+    state->score += 4 * GetFrameTime();
+  }
   if (IsKeyPressed(KEY_SPACE) && !state->running) {
     RestartGame(state);
   };
@@ -99,6 +104,7 @@ void DrawGame(GameState *state) {
   BeginDrawing();
   Rectangle player = GetPlayerRect(&state->player);
   ClearBackground(BLACK);
+  DrawText(TextFormat("Score: %d", (int)state->score), 25, 25, 20, WHITE);
   if (!state->running) {
     DrawText("FINISH", (GetScreenWidth() - MeasureText("FINISH", 20)) / 2.0f,
              (GetScreenHeight() - 20) / 2.0f, 20, RED);
