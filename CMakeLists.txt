@@ -92,9 +92,13 @@ if(UNIX AND NOT APPLE)
 endif()
 
 # Compiler warnings
-target_compile_options(raybird PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-Wall -Wextra -Wpedantic -Werror>
-)
+if(MSVC)
+    target_compile_options(raybird PRIVATE /W4 /WX)
+else()
+    target_compile_options(raybird PRIVATE
+        $<$<COMPILE_LANGUAGE:C>:-Wall -Wextra -Wpedantic -Werror>
+    )
+endif()
 
 # Debug configuration
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
