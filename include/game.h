@@ -13,7 +13,7 @@ typedef struct {
   GameStatus status;
   Player player;
   Pipe pipes[MAX_PIPES];
-  float score;
+  int score;
   bool shouldQuit;
 } GameState;
 

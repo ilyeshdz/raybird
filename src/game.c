@@ -44,7 +44,7 @@ void UpdateGame(GameState *state) {
   }
   
   if (state->status == GAME_RUNNING) {
-    state->score += SCORE_INCREMENT * GetFrameTime();
+    state->score += (int)(SCORE_INCREMENT * GetFrameTime());
     
     if (IsKeyPressed(KEY_SPACE)) {
       PlayerJump(&state->player);

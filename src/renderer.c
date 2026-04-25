@@ -34,7 +34,7 @@ void RenderPauseMenu(const GameState *state) {
 }
 
 void RenderUI(const GameState *state) {
-  DrawText(TextFormat("Score: %d", (int)state->score), UI_SCORE_X, UI_SCORE_Y, UI_FONT_SIZE, WHITE);
+  DrawText(TextFormat("Score: %d", state->score), UI_SCORE_X, UI_SCORE_Y, UI_FONT_SIZE, WHITE);
   
   if (state->status == GAME_OVER) {
     DrawText("FINISH", (GetScreenWidth() - MeasureText("FINISH", UI_FONT_SIZE)) / 2.0f,
