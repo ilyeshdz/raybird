@@ -2,10 +2,16 @@
 
 A Flappy Bird clone written in C using [raylib](https://www.raylib.com/).
 
+![C](https://img.shields.io/badge/C-11-blue.svg)
+![raylib](https://img.shields.io/badge/raylib-5.5-orange.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+
 ## Controls
 
 - **SPACE** - Jump
-- Press SPACE when game over to restart
+- **ESC** - Toggle pause/resume
+- **R** - Restart game (when paused)
+- **Q** - Quit game (when paused)
 
 ## Building
 
@@ -13,7 +19,7 @@ A Flappy Bird clone written in C using [raylib](https://www.raylib.com/).
 
 - [raylib](https://github.com/raysan5/raylib) (required)
 - GCC or Clang compiler
-- Make (optional, but included in Makefile)
+- Make
 
 ### Install raylib
 
@@ -24,7 +30,7 @@ Using Homebrew:
 brew install raylib
 ```
 
-Or from source: https://github.com/raysan5/raylib#building-on-macos
+Or build from source: https://github.com/raysan5/raylib#building-on-macos
 
 #### Linux (Ubuntu/Debian)
 
