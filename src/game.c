@@ -4,20 +4,19 @@
 #include <stdio.h>
 
 GameState InitGame() {
-  const float player_size = 100.0f;
   GameState game_state = {
       .status = GAME_RUNNING,
       .score = 0,
-      .player = {.position = {.y = (GetScreenHeight() - player_size) / 2.0f,
-                              .x = (GetScreenWidth() - player_size) / 2.0f},
-                 .size = {.x = player_size, .y = player_size},
+      .player = {.position = {.y = (GetScreenHeight() - PLAYER_SIZE) / 2.0f,
+                              .x = (GetScreenWidth() - PLAYER_SIZE) / 2.0f},
+                 .size = {.x = PLAYER_SIZE, .y = PLAYER_SIZE},
                  .gravity = 500.0,
                  .jumpForce = 400.0,
                  .velocity = {0}}};
 
   for (int i = 0; i < MAX_PIPES; i++) {
     game_state.pipes[i].xPos = GetScreenWidth() + (i * PIPE_SPACE);
-    int minGapY = 100;
+    int minGapY = MIN_GAP_Y;
     int maxGapY = GetScreenHeight() - PIPE_WIDTH - PIPE_GAP;
     int gapCenterY = GetRandomValue(minGapY, maxGapY);
 
@@ -36,10 +35,9 @@ GameState InitGame() {
 }
 
 void RestartGame(GameState *state) {
-  const float player_size = 100.0f;
   state->player.position = (Vector2){
-      .y = (GetScreenHeight() - player_size) / 2.0f,
-      .x = (GetScreenWidth() - player_size) / 2.0f,
+      .y = (GetScreenHeight() - PLAYER_SIZE) / 2.0f,
+      .x = (GetScreenWidth() - PLAYER_SIZE) / 2.0f,
   };
   state->score = 0;
   state->player.velocity = (Vector2){0};
@@ -47,7 +45,7 @@ void RestartGame(GameState *state) {
 
   for (int i = 0; i < MAX_PIPES; i++) {
     state->pipes[i].xPos = GetScreenWidth() + (i * PIPE_SPACE);
-    int minGapY = 100;
+    int minGapY = MIN_GAP_Y;
     int maxGapY = GetScreenHeight() - PIPE_WIDTH - PIPE_GAP;
     int gapCenterY = GetRandomValue(minGapY, maxGapY);
 
@@ -65,7 +63,7 @@ void RestartGame(GameState *state) {
 
 void UpdateGame(GameState *state) {
   if (state->status == GAME_RUNNING) {
-    state->score += 4 * GetFrameTime();
+    state->score += SCORE_INCREMENT * GetFrameTime();
   }
   if (IsKeyPressed(KEY_SPACE) && state->status == GAME_OVER) {
     RestartGame(state);
@@ -75,14 +73,14 @@ void UpdateGame(GameState *state) {
   }
   UpdatePlayer(&state->player);
   for (int i = 0; i < MAX_PIPES; i++) {
-    state->pipes[i].bottomRect.x -= 200 * GetFrameTime();
-    state->pipes[i].topRect.x -= 200 * GetFrameTime();
+    state->pipes[i].bottomRect.x -= PIPE_SPEED * GetFrameTime();
+    state->pipes[i].topRect.x -= PIPE_SPEED * GetFrameTime();
 
     if (state->pipes[i].topRect.x + PIPE_WIDTH < 0) {
       state->pipes[i].topRect.x += (MAX_PIPES * PIPE_SPACE);
       state->pipes[i].bottomRect.x += (MAX_PIPES * PIPE_SPACE);
 
-      int minGapY = 100;
+      int minGapY = MIN_GAP_Y;
       int maxGapY = GetScreenHeight() - (PIPE_WIDTH + 50) - PIPE_GAP;
       int gapCenterY = GetRandomValue(minGapY, maxGapY);
 
