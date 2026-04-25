@@ -54,7 +54,7 @@ GameState InitGame(void) {
                  .jumpForce = PLAYER_JUMP_FORCE,
                  .velocity = {0}}};
 
-  ResetPipes(game_state.pipes, MAX_PIPES);
+  ResetPipes(game_state.pipes, MAX_PIPES, 0);
   InitParticleSystem(&game_state.particles);
 
   return game_state;
@@ -69,7 +69,7 @@ void RestartGame(GameState *state) {
   state->player.velocity = (Vector2){0};
   state->status = GAME_RUNNING;
 
-  ResetPipes(state->pipes, MAX_PIPES);
+  ResetPipes(state->pipes, MAX_PIPES, 0);
   ResetParticles(&state->particles);
 }
 
@@ -89,7 +89,7 @@ void UpdateGame(GameState *state) {
     }
 
     UpdatePlayer(&state->player);
-    UpdatePipes(state->pipes, MAX_PIPES);
+    UpdatePipes(state->pipes, MAX_PIPES, state->score);
     UpdateParticles(&state->particles, GetFrameTime());
 
     // Check if player passed through any pipe
