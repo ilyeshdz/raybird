@@ -73,8 +73,8 @@ file(GLOB SOURCES "src/*.c")
 # Create executable
 add_executable(raybird ${SOURCES})
 
-# Link raylib
-target_link_libraries(raybird PRIVATE ${RAYLIB_LIBRARIES})
+# Link raylib and math library
+target_link_libraries(raybird PRIVATE ${RAYLIB_LIBRARIES} m)
 target_include_directories(raybird PRIVATE ${RAYLIB_INCLUDE_DIRS})
 
 # macOS-specific frameworks
