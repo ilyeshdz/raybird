@@ -41,7 +41,7 @@ jobs:
     - name: Install dependencies (Windows)
       if: matrix.os == 'windows-latest'
       run: |
-        choco install cmake glfw
+        choco install cmake glfw3
 
     - name: Build raylib (Ubuntu)
       if: matrix.os == 'ubuntu-latest'
