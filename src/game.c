@@ -4,11 +4,35 @@
 #include "collision.h"
 #include "renderer.h"
 #include "raylib.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#define HIGH_SCORE_FILE "highscore.txt"
+
+static int LoadHighScore(void) {
+  FILE *file = fopen(HIGH_SCORE_FILE, "r");
+  if (file) {
+    int score;
+    fscanf(file, "%d", &score);
+    fclose(file);
+    return score;
+  }
+  return 0;
+}
+
+static void SaveHighScore(int score) {
+  FILE *file = fopen(HIGH_SCORE_FILE, "w");
+  if (file) {
+    fprintf(file, "%d", score);
+    fclose(file);
+  }
+}
 
 GameState InitGame(void) {
   GameState game_state = {
       .status = GAME_RUNNING,
       .score = 0,
+      .highScore = LoadHighScore(),
       .shouldQuit = false,
       .player = {.position = {.y = (GetScreenHeight() - PLAYER_SIZE) / 2.0f,
                               .x = (GetScreenWidth() - PLAYER_SIZE) / 2.0f},
@@ -42,27 +66,41 @@ void UpdateGame(GameState *state) {
       state->status = GAME_RUNNING;
     }
   }
-  
+
   if (state->status == GAME_RUNNING) {
-    state->score += SCORE_INCREMENT;
-    
     if (IsKeyPressed(KEY_SPACE)) {
       PlayerJump(&state->player);
     }
-    
+
     UpdatePlayer(&state->player);
     UpdatePipes(state->pipes, MAX_PIPES);
-    
+
+    // Check if player passed through any pipe
+    for (int i = 0; i < MAX_PIPES; i++) {
+      if (!state->pipes[i].passed) {
+        // Check if player has passed the pipe (player x > pipe x + pipe width)
+        if (state->player.position.x > state->pipes[i].topRect.x + PIPE_WIDTH) {
+          state->pipes[i].passed = true;
+          state->score += SCORE_INCREMENT;
+        }
+      }
+    }
+
     CollisionType collision = CheckPipeCollision(&state->player, state->pipes, MAX_PIPES);
     if (collision == COLLISION_NONE) {
       collision = CheckBoundaryCollision(&state->player);
     }
-    
+
     if (collision != COLLISION_NONE) {
       state->status = GAME_OVER;
+      // Save high score if current score is higher
+      if (state->score > state->highScore) {
+        state->highScore = state->score;
+        SaveHighScore(state->highScore);
+      }
     }
   }
-  
+
   if (state->status == GAME_PAUSED) {
     if (IsKeyPressed(KEY_R)) {
       RestartGame(state);
@@ -71,7 +109,7 @@ void UpdateGame(GameState *state) {
       state->shouldQuit = true;
     }
   }
-  
+
   if (IsKeyPressed(KEY_SPACE) && state->status == GAME_OVER) {
     RestartGame(state);
   }

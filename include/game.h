@@ -14,6 +14,7 @@ typedef struct {
   Player player;
   Pipe pipes[MAX_PIPES];
   int score;
+  int highScore;
   bool shouldQuit;
 } GameState;
 

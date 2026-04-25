@@ -15,6 +15,7 @@ typedef struct {
   Rectangle topRect;
   Rectangle bottomRect;
   float xPos;
+  bool passed;
 } Pipe;
 
 void InitPipe(Pipe *pipe, float xPos);
