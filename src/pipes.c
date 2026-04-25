@@ -4,9 +4,8 @@
 void InitPipe(Pipe *pipe, float xPos) {
   pipe->xPos = xPos;
   pipe->passed = false;
-  int minGapY = MIN_GAP_Y;
   int maxGapY = GetScreenHeight() - PIPE_WIDTH - PIPE_GAP;
-  int gapCenterY = GetRandomValue(minGapY, maxGapY);
+  int gapCenterY = GetRandomValue(MIN_GAP_Y, maxGapY);
 
   pipe->topRect = (Rectangle){.x = xPos,
                                .y = gapCenterY - PIPE_HEIGHT,
