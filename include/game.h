@@ -2,13 +2,14 @@
 #define GAME_H
 #include "player.h"
 #include "raylib.h"
-#include <stdbool.h>
 
 #define PIPE_GAP 300
 #define MAX_PIPES 5
 #define PIPE_WIDTH 100
 #define PIPE_HEIGHT 600
 #define PIPE_SPACE 400
+
+typedef enum { GAME_RUNNING, GAME_OVER } GameStatus;
 
 typedef struct {
   Rectangle topRect;
@@ -17,7 +18,7 @@ typedef struct {
 } Pipe;
 
 typedef struct {
-  bool running;
+  GameStatus status;
   Player player;
   Pipe pipes[MAX_PIPES];
   float score;

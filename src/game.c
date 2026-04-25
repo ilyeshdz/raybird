@@ -6,7 +6,7 @@
 GameState InitGame() {
   const float player_size = 100.0f;
   GameState game_state = {
-      .running = true,
+      .status = GAME_RUNNING,
       .score = 0,
       .player = {.position = {.y = (GetScreenHeight() - player_size) / 2.0f,
                               .x = (GetScreenWidth() - player_size) / 2.0f},
@@ -43,7 +43,7 @@ void RestartGame(GameState *state) {
   };
   state->score = 0;
   state->player.velocity = (Vector2){0};
-  state->running = true;
+  state->status = GAME_RUNNING;
 
   for (int i = 0; i < MAX_PIPES; i++) {
     state->pipes[i].xPos = GetScreenWidth() + (i * PIPE_SPACE);
@@ -64,10 +64,10 @@ void RestartGame(GameState *state) {
 }
 
 void UpdateGame(GameState *state) {
-  if (state->running) {
+  if (state->status == GAME_RUNNING) {
     state->score += 4 * GetFrameTime();
   }
-  if (IsKeyPressed(KEY_SPACE) && !state->running) {
+  if (IsKeyPressed(KEY_SPACE) && state->status == GAME_OVER) {
     RestartGame(state);
   };
   if (IsKeyPressed(KEY_SPACE)) {
@@ -95,7 +95,7 @@ void UpdateGame(GameState *state) {
 
     if (CheckCollisionRecs(state->pipes[i].topRect, player_rect) ||
         CheckCollisionRecs(state->pipes[i].bottomRect, player_rect)) {
-      state->running = false;
+      state->status = GAME_OVER;
     }
   }
 }
@@ -105,7 +105,7 @@ void DrawGame(GameState *state) {
   Rectangle player = GetPlayerRect(&state->player);
   ClearBackground(BLACK);
   DrawText(TextFormat("Score: %d", (int)state->score), 25, 25, 20, WHITE);
-  if (!state->running) {
+  if (state->status == GAME_OVER) {
     DrawText("FINISH", (GetScreenWidth() - MeasureText("FINISH", 20)) / 2.0f,
              (GetScreenHeight() - 20) / 2.0f, 20, RED);
   } else {
