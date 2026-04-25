@@ -15,9 +15,7 @@ void RenderPipes(const Pipe *pipes, int count) {
   }
 }
 
-void RenderPauseMenu(const GameState *state) {
-  (void)state; // Unused parameter
-  
+void RenderPauseMenu(void) {
   const char *title = "PAUSED";
   const char *resume = "[ESC] Resume";
   const char *restart = "[R] Restart";
@@ -40,7 +38,7 @@ void RenderUI(const GameState *state) {
     DrawText("FINISH", (GetScreenWidth() - MeasureText("FINISH", UI_FONT_SIZE)) / 2.0f,
              (GetScreenHeight() - UI_FONT_SIZE) / 2.0f, UI_FONT_SIZE, RED);
   } else if (state->status == GAME_PAUSED) {
-    RenderPauseMenu(state);
+    RenderPauseMenu();
   }
 }
 
