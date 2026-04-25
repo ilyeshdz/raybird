@@ -5,7 +5,7 @@
 #include "raylib.h"
 
 #define PLAYER_SIZE 100.0f
-#define SCORE_INCREMENT 4
+#define SCORE_INCREMENT 1
 
 typedef enum { GAME_RUNNING, GAME_PAUSED, GAME_OVER } GameStatus;
 
