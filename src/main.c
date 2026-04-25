@@ -7,8 +7,8 @@ int main() {
   const int width = 1280;
   const int height = 720;
 
-  GameState game_state = InitGame();
   InitWindow(width, height, "hello");
+  GameState game_state = InitGame();
 
   while (!WindowShouldClose()) {
     UpdateGame(&game_state);
