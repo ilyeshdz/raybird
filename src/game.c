@@ -13,7 +13,7 @@ GameState InitGame() {
                  .size = {.x = player_size, .y = player_size},
                  .gravity = 500.0,
                  .jumpForce = 400.0,
-                 .velocity = {.x = 0, .y = 0}}};
+                 .velocity = {0}}};
 
   for (int i = 0; i < MAX_PIPES; i++) {
     game_state.pipes[i].xPos = GetScreenWidth() + (i * PIPE_SPACE);
@@ -42,7 +42,7 @@ void RestartGame(GameState *state) {
       .x = (GetScreenWidth() - player_size) / 2.0f,
   };
   state->score = 0;
-  state->player.velocity = (Vector2){.x = 0, .y = 0};
+  state->player.velocity = (Vector2){0};
   state->running = true;
 
   for (int i = 0; i < MAX_PIPES; i++) {
